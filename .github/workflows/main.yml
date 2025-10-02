@@ -1,0 +1,30 @@
+name: Facebook Auto Poster
+
+on:
+  schedule:
+    - cron: "0 */2 * * *"   # প্রতি 6 ঘন্টায় রান করবে (২৪ ঘন্টায়)
+  workflow_dispatch:         # ম্যানুয়ালি ট্রিগার করার জন্য
+
+jobs:
+  autopost:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run autoposter
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CHANNEL_USERNAME: ${{ secrets.CHANNEL_USERNAME }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: python test.py
